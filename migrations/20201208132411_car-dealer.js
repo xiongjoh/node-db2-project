@@ -4,11 +4,17 @@ exports.up = function(knex) {
       // id: primary, unique, not null, int, auto increments
       table.increments();
       // vin: unique, not null,
-      table.decimal('vin').notNullable().unique();
+      table.text('vin').notNullable().unique();
       // make: not null,
       table.text('make').notNullable();
+      // model: not null,
+      table.text('model').notNullable();
       // mileage: not null, int
-      table.decimal('mileage');
+      table.decimal('mileage').notNullable();
+      // transmission type
+      table.text('transmission')
+      // status of the title
+      table.text('status')
   })
 };
 
