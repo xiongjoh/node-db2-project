@@ -1,25 +1,10 @@
 const express = require('express');
 
 const Car = require('./cars-model');
+const carMid = require('../middlewares/cars-middlewares')
 
 const router = express.Router();
 
-// middleware
-async function checkId(req, res, next) {
-    try{
-        const { id } = req.params
-        const data = await Car.getById(id)
-        if(!data) {
-            res.status(404).json({message:`could not find car with id ${id}`})
-            return
-        } else {
-            req.carData = data
-            next()
-        }
-    } catch (err) {
-        next(err)
-    }
-}
 
 // endpoints
 router.get('/', async (req, res, next) => {
@@ -30,7 +15,7 @@ router.get('/', async (req, res, next) => {
         next(err)
     }
 })
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', carMid.checkId, async (req, res, next) => {
     const { id } = req.params
     try {
         const data = await Car.getById(id)
@@ -39,7 +24,7 @@ router.get('/:id', async (req, res, next) => {
         next(err)
     }
 })
-router.post('/', async (req, res, next) => {
+router.post('/', carMid.checkCarCreate, async (req, res, next) => {
     try {
         const car = await Car.create(req.body)
         res.status(201).json(car)
@@ -47,7 +32,7 @@ router.post('/', async (req, res, next) => {
         next(err)
     }
 })
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', carMid.checkId, carMid.checkUpdate, async (req, res, next) => {
     const { id } = req.params
     try {
         const updatedCar = await Car.update(id, req.body)
@@ -56,10 +41,11 @@ router.put('/:id', async (req, res, next) => {
         next(err)
     }
 })
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', carMid.checkId, async (req, res, next) => {
     const { id } = req.params
     try {
-
+        await Car.delete(id)
+        res.json(req.carData)
     } catch(err) {
         next(err)
     }

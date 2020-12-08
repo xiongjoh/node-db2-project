@@ -11,20 +11,20 @@ module.exports = {
     },
     create(car){
         // insert into cars (car columns) values (values of columns)
-        return db('car').insert(car)
+        return db('cars').insert(car)
         .then(([id]) => {
-            return db('car').where('id', id).first()
+            return db('cars').where('id', id).first()
         })
     },
     update(id, car){
         // update cars set status = 'salvaged'.... where id = id
-        return db('car').where('id', id).update(car)
+        return db('cars').where('id', id).update(car)
         .then(res => {
-            return db('car').where('id', id).first()
+            return db('cars').where('id', id).first()
         })
     },
     delete(id){
         // delete from cars where id = id
-        return db('posts').where('id', id).del()
+        return db('cars').where('id', id).del()
     },
 }
